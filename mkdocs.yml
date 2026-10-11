@@ -1,0 +1,18 @@
+site_name: Auth Microservice
+site_description: Authentication and authorization microservice (.NET, Clean Architecture)
+repo_url: https://github.com/MinaEmadMF/dotnet-auth-microservice
+edit_uri: edit/master/docs/
+
+nav:
+  - Overview: index.md
+  - Architecture: architecture.md
+  - API: api.md
+  - Configuration: configuration.md
+  - Local development: local-development.md
+  - Deployment: deployment.md
+  - Runbook: runbook.md
+  - Architecture decisions:
+      - adr/0001-record-architecture-decisions.md
+
+plugins:
+  - techdocs-core

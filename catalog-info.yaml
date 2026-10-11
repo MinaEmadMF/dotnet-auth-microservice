@@ -1,0 +1,105 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: dotnet-auth-microservice
+  title: Auth Microservice
+  description: Authentication and authorization microservice (.NET, Clean Architecture) issuing JWT access tokens and refresh tokens
+  annotations:
+    github.com/project-slug: MinaEmadMF/dotnet-auth-microservice
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - dotnet
+    - csharp
+    - jwt
+    - mongodb
+  links:
+    - url: https://veglos.github.io/posts/dotnet-auth-microservice-with-clean-architecture/
+      title: Design article
+      icon: docs
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:platform-engineering
+  system: infrastructure
+  providesApis:
+    - auth-api
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: auth-api
+  title: Auth API
+  description: Login, token refresh, sign-out and user creation
+  annotations:
+    github.com/project-slug: MinaEmadMF/dotnet-auth-microservice
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: group:platform-engineering
+  system: infrastructure
+  definition: |
+    openapi: 3.0.1
+    info:
+      title: Auth API
+      version: v1
+    servers:
+      - url: http://localhost:5000
+    paths:
+      /api/Auth/Login:
+        post:
+          summary: Authenticate with email and password
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    email: { type: string }
+                    password: { type: string }
+          responses:
+            '200': { description: Access token and refresh token, or an error response }
+      /api/Auth/RefreshToken:
+        post:
+          summary: Exchange an expired access token and a refresh token for new tokens
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    accessToken: { type: string }
+                    refreshToken: { type: string }
+          responses:
+            '200': { description: New access token and refresh token, or an error response }
+      /api/Auth/SignOut:
+        post:
+          summary: Revoke the user's refresh token
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    userId: { type: string }
+          responses:
+            '200': { description: Sign-out result }
+      /api/Auth/CreateUser:
+        post:
+          summary: Create a user with claims
+          requestBody:
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    email: { type: string }
+                    password: { type: string }
+                    claims:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          type: { type: string }
+                          value: { type: string }
+          responses:
+            '200': { description: Created user, or an error response }
